@@ -37,12 +37,16 @@ export const Route = createFileRoute("/email")({
   component: EmailPage,
 });
 
+type EmailLength = "short" | "standard" | "detailed";
+
 function EmailPage() {
   const run = useServerFn(generateEmail);
   const { prefs, loaded } = usePrefs();
   const [purpose, setPurpose] = useState("");
+  const [keyPoints, setKeyPoints] = useState("");
   const [recipient, setRecipient] = useState("");
   const [tone, setTone] = useState<Tone | null>(null);
+  const [length, setLength] = useState<EmailLength>("standard");
   const [result, setResult] = useState("");
   const [loading, setLoading] = useState(false);
 
