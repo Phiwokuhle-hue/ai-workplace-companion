@@ -7,6 +7,8 @@ const BASE_SYSTEM =
 const EmailInput = z.object({
   purpose: z.string().min(1).max(4000),
   tone: z.enum(["friendly", "formal", "persuasive"]),
+  length: z.enum(["short", "standard", "detailed"]),
+  keyPoints: z.string().max(2000).optional(),
   recipient: z.string().max(200).optional(),
 });
 
