@@ -21,21 +21,33 @@ export const generateEmail = createServerFn({ method: "POST" })
       formal: "formal, precise and businesslike",
       persuasive: "confident and persuasive, leading to a clear ask",
     }[data.tone];
+    const lengthGuide = {
+      short:
+        "SHORT: 1-2 short paragraphs, roughly 60-100 words in the body. Get to the point immediately.",
+      standard:
+        "STANDARD: 2-4 short paragraphs, roughly 120-200 words in the body. Balanced detail.",
+      detailed:
+        "DETAILED: 4-6 paragraphs, roughly 250-400 words in the body. Cover context, key points and clear next steps.",
+    }[data.length];
 
     return generateText(
       BASE_SYSTEM,
       [
         "Write a polished professional email.",
         `Tone: ${toneGuide}.`,
+        `Length: ${lengthGuide}`,
         data.recipient ? `Recipient: ${data.recipient}.` : "",
         `Purpose / rough notes from the sender:\n"""${data.purpose}"""`,
+        data.keyPoints
+          ? `Key points that MUST be covered, each clearly addressed:\n"""${data.keyPoints}"""`
+          : "",
         "",
         "Format exactly like this:",
         "Subject: <one concise subject line>",
         "",
         "<greeting>",
         "",
-        "<2-4 short paragraphs, tightly written, no filler>",
+        "<body paragraphs matching the requested length, tightly written, no filler; if key points were provided, each one must be clearly addressed — use short bullet lines starting with '- ' for a list of key points when there are several>",
         "",
         "<sign-off>",
         "[Your name]",
