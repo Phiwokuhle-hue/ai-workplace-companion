@@ -37,12 +37,16 @@ export const Route = createFileRoute("/email")({
   component: EmailPage,
 });
 
+type EmailLength = "short" | "standard" | "detailed";
+
 function EmailPage() {
   const run = useServerFn(generateEmail);
   const { prefs, loaded } = usePrefs();
   const [purpose, setPurpose] = useState("");
+  const [keyPoints, setKeyPoints] = useState("");
   const [recipient, setRecipient] = useState("");
   const [tone, setTone] = useState<Tone | null>(null);
+  const [length, setLength] = useState<EmailLength>("standard");
   const [result, setResult] = useState("");
   const [loading, setLoading] = useState(false);
 
@@ -61,6 +65,8 @@ function EmailPage() {
             ? `${purpose}\n\nSender name: ${prefs.signature}`
             : purpose,
           tone: activeTone,
+          length,
+          keyPoints: keyPoints.trim() || undefined,
           recipient: recipient.trim() || undefined,
         },
       });
@@ -86,14 +92,28 @@ function EmailPage() {
           <Label htmlFor="purpose">Purpose or rough message</Label>
           <Textarea
             id="purpose"
-            rows={7}
+            rows={6}
             value={purpose}
             onChange={(e) => setPurpose(e.target.value)}
             placeholder="e.g. tell the client the report slipped to Friday, apologise briefly, offer a short call"
           />
         </div>
 
-        <div className="grid gap-5 sm:grid-cols-2">
+        <div className="grid gap-2">
+          <Label htmlFor="keyPoints">Key points to include (optional)</Label>
+          <Textarea
+            id="keyPoints"
+            rows={3}
+            value={keyPoints}
+            onChange={(e) => setKeyPoints(e.target.value)}
+            placeholder="One per line, e.g.&#10;Report now due Friday 14th&#10;Reason: data delay from vendor&#10;Offer 15-min call to walk through impact"
+          />
+          <p className="text-xs text-muted-foreground">
+            Each point you list will be clearly covered in the email.
+          </p>
+        </div>
+
+        <div className="grid gap-5 sm:grid-cols-3">
           <div className="grid gap-2">
             <Label htmlFor="recipient">Recipient (optional)</Label>
             <Input
@@ -113,6 +133,19 @@ function EmailPage() {
                 <SelectItem value="friendly">Friendly</SelectItem>
                 <SelectItem value="formal">Formal</SelectItem>
                 <SelectItem value="persuasive">Persuasive</SelectItem>
+              </SelectContent>
+            </Select>
+          </div>
+          <div className="grid gap-2">
+            <Label htmlFor="length">Length</Label>
+            <Select value={length} onValueChange={(v) => setLength(v as EmailLength)}>
+              <SelectTrigger id="length">
+                <SelectValue />
+              </SelectTrigger>
+              <SelectContent>
+                <SelectItem value="short">Short</SelectItem>
+                <SelectItem value="standard">Standard</SelectItem>
+                <SelectItem value="detailed">Detailed</SelectItem>
               </SelectContent>
             </Select>
           </div>
