@@ -65,6 +65,8 @@ function EmailPage() {
             ? `${purpose}\n\nSender name: ${prefs.signature}`
             : purpose,
           tone: activeTone,
+          length,
+          keyPoints: keyPoints.trim() || undefined,
           recipient: recipient.trim() || undefined,
         },
       });
