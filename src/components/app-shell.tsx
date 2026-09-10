@@ -87,7 +87,7 @@ export function AppShell({
           aria-expanded={open}
           className="flex size-10 items-center justify-center rounded-lg text-sidebar-foreground hover:bg-sidebar-accent"
         >
-          {open ? <Menu className="size-5" /> : <Menu className="size-5" />}
+          <Menu className="size-5" />
         </button>
       </header>
 
